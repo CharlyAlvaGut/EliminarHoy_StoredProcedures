@@ -96,7 +96,11 @@ public class EliminarHoy {
                                     c.setNombreCategoria(nombreCategoria);
                                     c.setDescripcion(descripcionCategoria);
 
+                                    System.out.println();
+                                    System.out.println("-----------------------------------");
                                     System.out.println(categoriaDAO.insertar(c));
+                                    System.out.println("-----------------------------------");
+                                    System.out.println();
                                 }
 
                             } catch (Exception ex) {
@@ -125,7 +129,7 @@ public class EliminarHoy {
                                         System.out.println();
 
                                     }
-                                    System.out.println("Para continuar, por favor, seleccione la categoria a actualizar: ");
+                                    System.out.print("Para continuar, por favor, seleccione la categoria a actualizar: ");
                                 }
                                 cat = leer.nextInt();
                                 leer.nextLine();
@@ -152,7 +156,11 @@ public class EliminarHoy {
                                     c.setNombreCategoria(nombreCategoria);
                                     c.setDescripcion(descripcionCategoria);
 
+                                    System.out.println();
+                                    System.out.println("-----------------------------------");
                                     System.out.println(categoriaDAO.actualizar(c));
+                                    System.out.println("-----------------------------------");
+                                    System.out.println();
                                 }
 
                             } catch (Exception ex) {
@@ -163,8 +171,6 @@ public class EliminarHoy {
                             System.out.println("-------- ELIMINAR UNA CATEGORIA  --------");
                             try {
                                 int cat;
-                                System.out.println("Para continuar, por favor, seleccione la categoria a eliminar: ");
-
                                 List<Categoria> categorias = categoriaDAO.obtenerCategorias();
                                 if (categorias.isEmpty()) {
                                     System.out.println();
@@ -182,6 +188,7 @@ public class EliminarHoy {
                                         System.out.println("-----------------------------------");
                                         System.out.println();
                                     }
+                                    System.out.print("Para continuar, por favor, seleccione la categoria a eliminar: ");
                                 }
                                 cat = leer.nextInt();
                                 leer.nextLine();
@@ -322,19 +329,12 @@ public class EliminarHoy {
                                     p.setExistencia(existenciaProducto);
                                     p.setIdCategoria(idCategoria);
 
-                                    if (!productoDAO.insertar(p)) {
-                                        System.out.println();
-                                        System.out.println("-----------------------------------");
-                                        System.out.println("Error al agregar el producto! :(");
-                                        System.out.println("-----------------------------------");
-                                        System.out.println();
-                                    } else {
-                                        System.out.println();
-                                        System.out.println("-----------------------------------");
-                                        System.out.println("Producto agregado con exito! :)");
-                                        System.out.println("-----------------------------------");
-                                        System.out.println();
-                                    }
+                                    System.out.println();
+                                    System.out.println("-----------------------------------");
+                                    System.out.println(productoDAO.insertar(p));
+                                    System.out.println("-----------------------------------");
+                                    System.out.println();
+                                    
                                 }
 
                             } catch (Exception ex) {
@@ -369,7 +369,7 @@ public class EliminarHoy {
                                         System.out.println("-----------------------------------");
                                         System.out.println();
                                     }
-                                    System.out.println("Para continuar, por favor, seleccione el producto a actualizar: ");
+                                    System.out.print("Para continuar, por favor, seleccione el producto a actualizar: ");
                                 }
                                 prod = leer.nextInt();
                                 leer.nextLine();
@@ -426,21 +426,12 @@ public class EliminarHoy {
                                         p.setExistencia(existenciaProducto);
                                         p.setIdCategoria(idCategoria);
 
-                                        if (!productoDAO.actualizar(p)) {
-                                            System.out.println();
-                                            System.out.println("-----------------------------------");
-                                            System.out.println("Error al actualizar el producto! :(");
-                                            System.out.println("-----------------------------------");
-                                            System.out.println();
-                                        } else {
-                                            System.out.println();
-                                            System.out.println("-----------------------------------");
-                                            System.out.println("Producto actualizado con exito! :)");
-                                            System.out.println("-----------------------------------");
-                                            System.out.println();
-                                        }
+                                        System.out.println();
+                                        System.out.println("-----------------------------------");
+                                        System.out.println(productoDAO.actualizar(p));
+                                        System.out.println("-----------------------------------");
+                                        System.out.println();
                                     }
-
                                 }
 
                             } catch (Exception ex) {
@@ -490,19 +481,11 @@ public class EliminarHoy {
                                 leer.nextLine();
                                 System.out.println("-----------------------------------");
                                 if (valida == 1) {
-                                    if (!productoDAO.eliminar(p)) {
-                                        System.out.println();
-                                        System.out.println("-----------------------------------");
-                                        System.out.println("Error al eliminar el producto! :(");
-                                        System.out.println("-----------------------------------");
-                                        System.out.println();
-                                    } else {
-                                        System.out.println();
-                                        System.out.println("-----------------------------------");
-                                        System.out.println("Producto eliminado con exito! :)");
-                                        System.out.println("-----------------------------------");
-                                        System.out.println();
-                                    }
+                                    System.out.println();
+                                    System.out.println("-----------------------------------");
+                                    System.out.println(productoDAO.eliminar(p));
+                                    System.out.println("-----------------------------------");
+                                    System.out.println();
                                 }
 
                             } catch (Exception ex) {

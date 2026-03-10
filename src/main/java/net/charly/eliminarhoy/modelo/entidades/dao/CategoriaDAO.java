@@ -69,7 +69,7 @@ public class CategoriaDAO extends Conexion {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al insertar categoria! :( " + ex.getLocalizedMessage());
+            System.out.println("Error al actualizar la categoria! :( " + ex.getLocalizedMessage());
         } finally {
             desconectar();
         }
@@ -95,7 +95,7 @@ public class CategoriaDAO extends Conexion {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al insertar categoria! :( " + ex.getLocalizedMessage());
+            System.out.println("Error al eliminar la categoria! :( " + ex.getLocalizedMessage());
         } finally {
             desconectar();
         }
@@ -109,7 +109,7 @@ public class CategoriaDAO extends Conexion {
             conectar();
             cs = conn.prepareCall(SQL_SELECT);
             cs.setInt(1, id);
-            rs = ps.executeQuery();
+            rs = cs.executeQuery();
             if (rs.next()) {
                 c = new Categoria();
                 c.setIdCategoria(rs.getInt("idCategoria"));
@@ -118,7 +118,7 @@ public class CategoriaDAO extends Conexion {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al obtener la categoria! " + ex.getLocalizedMessage());
+            System.out.println("Error al obtener la categoria especificada! " + ex.getLocalizedMessage());
         } finally {
             desconectar();
         }
@@ -141,7 +141,7 @@ public class CategoriaDAO extends Conexion {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al obtener la categoria! " + ex.getLocalizedMessage());
+            System.out.println("Error al obtener las categorias disponibles! " + ex.getLocalizedMessage());
         } finally {
             desconectar();
         }

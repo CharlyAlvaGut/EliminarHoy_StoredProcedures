@@ -16,25 +16,31 @@ import net.charly.eliminarhoy.modelo.entidades.Producto;
  */
 public class ProductoDAO extends Conexion {
 
-    private static final String SQL_INSERT = "INSERT INTO producto (nombreProducto, descripcionProducto, precioProducto, existencia, create_at, idCategoria) VALUES (?,?,?,?,NOW(),?)";
-    private static final String SQL_UPDATE = "UPDATE producto SET nombreProducto = ?, descripcionProducto = ?, precioProducto = ?, existencia = ?, create_at = NOW(), idCategoria = ? "
-            + "WHERE idProducto = ?";
-    private static final String SQL_DELETE = "DELETE FROM producto WHERE idProducto = ?";
-    private static final String SQL_SELECT = "SELECT * FROM producto WHERE idProducto = ?";
-    private static final String SQL_SELECT_ALL = "SELECT * FROM producto";
+    private static final String SQL_INSERT = "{CALL sp_insertarProducto(?,?,?,?,?)}";
+    private static final String SQL_UPDATE = "{CALL sp_actualizarProducto(?,?,?,?,?,?)}";
+    private static final String SQL_DELETE = "{CALL sp_eliminarProducto(?)}";
+    private static final String SQL_SELECT = "{CALL sp_obtenerProducto(?)}";
+    private static final String SQL_SELECT_ALL = "{CALL sp_obtenerProductos()}";
 
-    public boolean insertar(Producto p) {
+    public String insertar(Producto p) {
         conectar();
+        String resultado = "";
         try {
-            ps = conn.prepareStatement(SQL_INSERT);
-            ps.setString(1, p.getNombreProducto());
-            ps.setString(2, p.getDescripcionProducto());
-            ps.setDouble(3, p.getPrecioProducto());
-            ps.setInt(4, p.getExistencia());
-            ps.setInt(5, p.getIdCategoria());
+            cs = conn.prepareCall(SQL_INSERT);
+            cs.setString(1, p.getNombreProducto());
+            cs.setString(2, p.getDescripcionProducto());
+            cs.setDouble(3, p.getPrecioProducto());
+            cs.setInt(4, p.getExistencia());
+            cs.setInt(5, p.getIdCategoria());
 
-            if (ps.executeUpdate() > 0) {
-                return true;
+            boolean tieneResultado = cs.execute();
+
+            if (tieneResultado) {
+                rs = cs.getResultSet();
+
+                if (rs.next()) {
+                    resultado = rs.getString("tResultado");
+                }
             }
 
         } catch (SQLException ex) {
@@ -43,59 +49,73 @@ public class ProductoDAO extends Conexion {
         } finally {
             desconectar();
         }
-        return false;
+        return resultado;
     }
 
-    public boolean actualizar(Producto p) {
+    public String actualizar(Producto p) {
         conectar();
+        String resultado = "";
         try {
-            ps = conn.prepareStatement(SQL_UPDATE);
-            ps.setString(1, p.getNombreProducto());
-            ps.setString(2, p.getDescripcionProducto());
-            ps.setDouble(3, p.getPrecioProducto());
-            ps.setInt(4, p.getExistencia());
-            ps.setInt(5, p.getIdCategoria());
-            ps.setInt(6, p.getIdProducto());
+            cs = conn.prepareCall(SQL_UPDATE);
+            cs.setString(1, p.getNombreProducto());
+            cs.setString(2, p.getDescripcionProducto());
+            cs.setDouble(3, p.getPrecioProducto());
+            cs.setInt(4, p.getExistencia());
+            cs.setInt(5, p.getIdCategoria());
+            cs.setInt(6, p.getIdProducto());
 
-            if (ps.executeUpdate() > 0) {
-                return true;
+            boolean tieneResultado = cs.execute();
+
+            if (tieneResultado) {
+                rs = cs.getResultSet();
+
+                if (rs.next()) {
+                    resultado = rs.getString("tResultado");
+                }
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al actualizar la producto! :( " + ex.getLocalizedMessage());
+            System.out.println("Error al actualizar el producto! :( " + ex.getLocalizedMessage());
 
         } finally {
             desconectar();
         }
-        return false;
+        return resultado;
     }
 
-    public boolean eliminar(Producto p) {
+    public String eliminar(Producto p) {
         conectar();
+        String resultado = "";
         try {
-            ps = conn.prepareStatement(SQL_DELETE);
-            ps.setInt(1, p.getIdProducto());
+            cs = conn.prepareCall(SQL_DELETE);
+            cs.setInt(1, p.getIdProducto());
 
-            if (ps.executeUpdate() > 0) {
-                return true;
+            boolean tieneResultado = cs.execute();
+
+            if (tieneResultado) {
+                rs = cs.getResultSet();
+
+                if (rs.next()) {
+                    resultado = rs.getString("tResultado");
+                }
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al eliminar la producto! :( " + ex.getLocalizedMessage());
+            System.out.println("Error al eliminar el producto! :( " + ex.getLocalizedMessage());
 
         } finally {
             desconectar();
         }
-        return false;
+        return resultado;
     }
 
     public Producto obtenerProducto(int id) {
         Producto p = null;
         try {
             conectar();
-            ps = conn.prepareStatement(SQL_SELECT);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
+            cs = conn.prepareCall(SQL_SELECT);
+            cs.setInt(1, id);
+            rs = cs.executeQuery();
             if (rs.next()) {
                 p = new Producto();
                 p.setIdProducto(rs.getInt("idProducto"));
@@ -108,7 +128,7 @@ public class ProductoDAO extends Conexion {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al obtener la categoria! " + ex.getLocalizedMessage());
+            System.out.println("Error al obtener el producto especificado! " + ex.getLocalizedMessage());
         } finally {
             desconectar();
         }
@@ -119,8 +139,8 @@ public class ProductoDAO extends Conexion {
         List<Producto> productos = new ArrayList<>();
         try {
             conectar();
-            ps = conn.prepareStatement(SQL_SELECT_ALL);
-            rs = ps.executeQuery();
+            cs = conn.prepareCall(SQL_SELECT_ALL);
+            rs = cs.executeQuery();
             while (rs.next()) {
                 Producto p = new Producto();
                 p.setIdProducto(rs.getInt("idProducto"));
@@ -135,7 +155,7 @@ public class ProductoDAO extends Conexion {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al obtener la categoria! " + ex.getLocalizedMessage());
+            System.out.println("Error al obtener los productos disponibles! " + ex.getLocalizedMessage());
         } finally {
             desconectar();
         }
