@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-03-06 13:07:00
+Date: 2026-03-10 11:44:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -77,6 +77,40 @@ END
 DELIMITER ;
 
 -- ----------------------------
+-- Procedure structure for sp_actualizarProducto
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_actualizarProducto`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizarProducto`(IN `nombre` varchar(20),IN `descripcion` varchar(100), IN `precio` decimal(10,2), IN `existencia` int(11), IN `id_cat` int(11), IN `id_prod` int(11))
+BEGIN
+		DECLARE error_ocurrido INT DEFAULT 0;
+		DECLARE resultado VARCHAR(100);
+
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    SET error_ocurrido = 1;
+
+		UPDATE producto 
+		SET nombreProducto = nombre, 
+				descripcionProducto = descripcion, 
+				precioProducto = precio, 
+				existencia = existencia, 
+				create_at = NOW(), 
+				idCategoria = id_cat 
+		WHERE idProducto = id_prod;
+
+    IF error_ocurrido = 1 THEN
+				SET resultado = 'Error al actualizar el producto! :(';
+    ELSE
+        SET resultado = 'Producto actualizado con exito! :)';
+    END IF;
+
+		SELECT resultado AS tResultado;
+
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
 -- Procedure structure for sp_eliminarCategoria
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_eliminarCategoria`;
@@ -95,6 +129,33 @@ BEGIN
 			SET resultado = 'Error al eliminar la categoria! :(';
 	ELSE
 			SET resultado = 'Categoria eliminada con exito! :)';
+	END IF;
+
+	SELECT resultado AS tResultado;
+
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for sp_eliminarProducto
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_eliminarProducto`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_eliminarProducto`(IN `id` int)
+BEGIN
+	DECLARE error_ocurrido INT DEFAULT 0;
+	DECLARE resultado VARCHAR(100);
+
+	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+	SET error_ocurrido = 1;
+
+	DELETE FROM producto WHERE idProducto = id;
+
+	IF error_ocurrido = 1 THEN
+			SET resultado = 'Error al eliminar el producto! :(';
+	ELSE
+			SET resultado = 'Producto eliminado con exito! :)';
 	END IF;
 
 	SELECT resultado AS tResultado;
@@ -123,6 +184,34 @@ BEGIN
 				SET resultado = 'Error al agregar la categoria! :(';
     ELSE
         SET resultado = 'Categoria agregada con exito! :)';
+    END IF;
+
+		SELECT resultado AS tResultado;
+
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for sp_insertarProducto
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_insertarProducto`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insertarProducto`(IN `nombre` varchar(20),IN `descripcion` varchar(100), IN `precio` decimal(10,2), IN `existencia` int(11), IN `id_cat` int(11))
+BEGIN
+	  DECLARE error_ocurrido INT DEFAULT 0;
+		DECLARE resultado VARCHAR(100);
+
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    SET error_ocurrido = 1;
+
+    INSERT INTO producto (nombreProducto, descripcionProducto, precioProducto, existencia, create_at, idCategoria) 
+		VALUES (nombre,descripcion,precio,existencia,NOW(),id_cat);
+
+    IF error_ocurrido = 1 THEN
+				SET resultado = 'Error al agregar el producto! :(';
+    ELSE
+        SET resultado = 'Producto agregado con exito! :)';
     END IF;
 
 		SELECT resultado AS tResultado;
@@ -175,6 +264,57 @@ BEGIN
 
 		IF error_ocurrido = 1 THEN
 				SET resultado = 'Error al consultar las categorias disponibles';
+		END IF;
+
+		SELECT resultado AS tResultado;
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for sp_obtenerProducto
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_obtenerProducto`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtenerProducto`(IN `id` int)
+BEGIN
+		DECLARE error_ocurrido INT DEFAULT 0;
+		DECLARE resultado VARCHAR(100) DEFAULT 'Consulta realizada correctamente';
+
+		DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+		SET error_ocurrido = 1;
+
+		SELECT * 
+		FROM producto 
+		WHERE idProducto = id;
+
+		IF error_ocurrido = 1 THEN
+				SET resultado = 'Error al consultar el produicto';
+		END IF;
+
+		SELECT resultado AS tResultado;
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for sp_obtenerProductos
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_obtenerProductos`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtenerProductos`()
+BEGIN
+		DECLARE error_ocurrido INT DEFAULT 0;
+		DECLARE resultado VARCHAR(100) DEFAULT 'Consulta realizada correctamente';
+
+		DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+		SET error_ocurrido = 1;
+
+		SELECT * 
+		FROM producto;
+
+		IF error_ocurrido = 1 THEN
+				SET resultado = 'Error al consultar los productos disponibles';
 		END IF;
 
 		SELECT resultado AS tResultado;
